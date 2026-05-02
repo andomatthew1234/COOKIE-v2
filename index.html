@@ -164,6 +164,27 @@ body{
     100%{opacity:0; transform:translate(-50%, -50%) scale(2);}
 }
 
+/* ===== LIBRARY ===== */
+
+.shop-body.library .shop-details{
+    display:none;
+}
+
+.shop-body.library .shop-items{
+    width:100%;
+}
+
+.apply-btn{
+    margin-left:10px;
+    padding:5px 10px;
+    border:none;
+    border-radius:8px;
+    background:linear-gradient(135deg,#ffb347,#ff6a2f);
+    color:white;
+    font-weight:700;
+    cursor:pointer;
+}
+
 /* ===== SHOP ===== */
 
 #shop-sidebar{
@@ -335,7 +356,7 @@ body{
 
     <div class="shop-body">
 
-        <div class="shop-items">
+        <div class="shop-items" id="shop-items">
             <div class="shop-item" id="yellow-item">
                 Yellow Cookie - 100🍪
             </div>
@@ -363,6 +384,20 @@ body{
 
 let cookies = Number(localStorage.getItem("cookies")) || 0;
 let owned = JSON.parse(localStorage.getItem("owned")) || [];
+let currentCookie = localStorage.getItem("currentCookie") || "default";
+
+const cookieImages = {
+    default: "cookie.png",
+    yellow: "items/yellow_cookie.png"
+};
+
+/* SET COOKIE */
+
+function setCookie(id) {
+    currentCookie = id;
+    cookieImg.src = cookieImages[id];
+    localStorage.setItem("currentCookie", currentCookie);
+}
 
 /* ELEMENTS */
 
@@ -398,11 +433,7 @@ function updateUI(){
 /* INIT */
 
 updateUI();
-
-// Apply owned items on load
-if (owned.includes("yellow")) {
-    cookieImg.src = "items/yellow_cookie.png";
-}
+setCookie(currentCookie);
 
 /* COOKIE CLICK */
 
@@ -427,7 +458,7 @@ buyBtn.onclick = ()=>{
         cookies -= 100;
         owned.push("yellow");
 
-        cookieImg.src = "items/yellow_cookie.png";
+        setCookie("yellow");
 
         updateUI();
 
@@ -444,11 +475,52 @@ buyBtn.onclick = ()=>{
 
 function selectItem(){
     if(owned.includes("yellow")){
-        cookieImg.src = "items/yellow_cookie.png";
+        setCookie("yellow");
     }
 }
 
 document.getElementById("yellow-item").onclick = selectItem;
+
+/* TAB SWITCHING */
+
+const tabs = document.querySelectorAll(".shop-tab");
+
+tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+        tabs.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        if (tab.innerText === "Shop") {
+            showShop();
+        } else if (tab.innerText === "My Library") {
+            showLibrary();
+        }
+    });
+});
+
+function showShop() {
+    const shopItems = document.getElementById("shop-items");
+    shopItems.innerHTML = '<div class="shop-item" id="yellow-item">Yellow Cookie - 100🍪</div>';
+    document.getElementById("yellow-item").onclick = selectItem;
+
+    document.getElementById("item-img").src = "items/yellow_cookie.png";
+    document.getElementById("item-title").innerText = "YELLOW COOKIE!";
+    document.getElementById("item-desc").innerText = "Applies a YELLOW COOKIE to your page forever!";
+
+    document.getElementById("shop-sidebar").classList.remove("library");
+    buyBtn.style.display = "block";
+    updateUI();
+}
+
+function showLibrary() {
+    const shopItems = document.getElementById("shop-items");
+    shopItems.innerHTML = '<div class="shop-item">Default Cookie <button class="apply-btn" onclick="setCookie(\'default\')">Apply</button></div>';
+    if (owned.includes("yellow")) {
+        shopItems.innerHTML += '<div class="shop-item">Yellow Cookie <button class="apply-btn" onclick="setCookie(\'yellow\')">Apply</button></div>';
+    }
+
+    document.getElementById("shop-sidebar").classList.add("library");
+    buyBtn.style.display = "none";
+}
 
 /* SHOP TOGGLE */
 
