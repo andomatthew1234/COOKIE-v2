@@ -34,18 +34,9 @@ body{
 /* ===== RESPONSIVE ===== */
 
 @media (max-width: 700px){
-
-    #cookie-container{
-        transform:scale(0.75);
-    }
-
-    #counter{
-        font-size:2rem !important;
-    }
-
-    #shop-sidebar{
-        width:100% !important;
-    }
+    #cookie-container{ transform:scale(0.75); }
+    #counter{ font-size:2rem !important; }
+    #shop-sidebar{ width:100% !important; }
 }
 
 /* ===== COUNTER ===== */
@@ -57,7 +48,6 @@ body{
     font-size:3rem;
     font-weight:900;
     text-shadow:0 0 25px rgba(255,180,80,0.4);
-    z-index:10;
 }
 
 /* ===== SHOP BUTTON ===== */
@@ -66,37 +56,21 @@ body{
     position:absolute;
     top:20px;
     right:20px;
-
     padding:12px 16px;
     font-size:1.1rem;
     font-weight:800;
-
     border:none;
     border-radius:14px;
-
     cursor:pointer;
-
     background:linear-gradient(135deg,#ffb347,#ff6a2f);
     color:white;
-
     box-shadow:0 0 25px rgba(255,140,50,0.4);
-
     display:flex;
     align-items:center;
     gap:10px;
-
-    transition:0.2s;
-    z-index:20;
 }
 
-#shop-button img{
-    width:22px;
-    height:22px;
-}
-
-#shop-button:hover{
-    transform:scale(1.05);
-}
+#shop-button img{ width:22px; height:22px; }
 
 /* ===== COOKIE ===== */
 
@@ -127,14 +101,6 @@ body{
     justify-content:center;
     filter:drop-shadow(0 20px 40px rgba(0,0,0,0.6));
     transition:transform 0.08s ease;
-}
-
-#cookie:hover{
-    transform:scale(1.05) rotate(-2deg);
-}
-
-#cookie:active{
-    transform:scale(0.92);
 }
 
 #cookie img{
@@ -179,6 +145,25 @@ body{
     to{opacity:0; transform:translate(var(--x), var(--y)) scale(0);}
 }
 
+/* ===== PURCHASE EFFECT ===== */
+
+.purchase-effect{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    font-size:3rem;
+    font-weight:900;
+    color:#fff3d6;
+    animation:purchaseFloat 2s forwards;
+    pointer-events:none;
+}
+
+@keyframes purchaseFloat{
+    0%{opacity:1; transform:translate(-50%, -50%) scale(1);}
+    100%{opacity:0; transform:translate(-50%, -50%) scale(2);}
+}
+
 /* ===== SHOP ===== */
 
 #shop-sidebar{
@@ -194,7 +179,6 @@ body{
     transition:0.3s ease;
     display:flex;
     flex-direction:column;
-    z-index:100;
 }
 
 #shop-sidebar.open{
@@ -208,10 +192,9 @@ body{
     font-size:1.8rem;
     font-weight:900;
     border-bottom:1px solid rgba(255,255,255,0.1);
-
     display:flex;
-    align-items:center;
     justify-content:space-between;
+    align-items:center;
 }
 
 .shop-header-left{
@@ -225,7 +208,7 @@ body{
     height:26px;
 }
 
-/* CLOSE BUTTON */
+/* CLOSE */
 
 #close-shop{
     background:none;
@@ -233,13 +216,27 @@ body{
     color:white;
     font-size:1.5rem;
     cursor:pointer;
-    opacity:0.7;
-    transition:0.2s;
 }
 
-#close-shop:hover{
+/* TABS */
+
+.shop-tabs{
+    display:flex;
+    border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+.shop-tab{
+    flex:1;
+    padding:10px;
+    text-align:center;
+    cursor:pointer;
+    font-weight:700;
+    opacity:0.6;
+}
+
+.shop-tab.active{
     opacity:1;
-    transform:scale(1.1);
+    background:rgba(255,140,50,0.15);
 }
 
 /* BODY */
@@ -259,16 +256,10 @@ body{
 .shop-item{
     padding:15px;
     cursor:pointer;
-    transition:0.2s;
-    border-bottom:1px solid rgba(255,255,255,0.05);
 }
 
 .shop-item:hover{
     background:rgba(255,140,50,0.1);
-}
-
-.shop-item.active{
-    background:rgba(255,140,50,0.25);
 }
 
 /* DETAILS */
@@ -289,15 +280,19 @@ body{
     object-fit:contain;
 }
 
-.shop-title{
-    font-size:1.5rem;
+#buy-btn{
+    padding:12px 18px;
+    border:none;
+    border-radius:12px;
     font-weight:900;
+    cursor:pointer;
+    background:linear-gradient(135deg,#ffb347,#ff6a2f);
+    color:white;
 }
 
-.shop-desc{
-    font-size:0.95rem;
-    opacity:0.8;
-    line-height:1.4;
+#buy-btn:disabled {
+    background: grey;
+    cursor: not-allowed;
 }
 
 </style>
@@ -315,7 +310,7 @@ body{
 <div id="cookie-container">
     <div id="cookie-glow"></div>
     <div id="cookie">
-        <img src="cookie.png">
+        <img id="cookie-img" src="cookie.png">
     </div>
 </div>
 
@@ -333,21 +328,28 @@ body{
 
     </div>
 
+    <div class="shop-tabs">
+        <div class="shop-tab active">Shop</div>
+        <div class="shop-tab">My Library</div>
+    </div>
+
     <div class="shop-body">
 
         <div class="shop-items">
-            <div class="shop-item active">Yellow Cookie</div>
+            <div class="shop-item" id="yellow-item">
+                Yellow Cookie - 100🍪
+            </div>
         </div>
 
         <div class="shop-details">
 
-            <img src="items/yellow_cookie.png">
+            <img id="item-img" src="items/yellow_cookie.png">
 
-            <div class="shop-title">YELLOW COOKIE!</div>
+            <div id="item-title">YELLOW COOKIE!</div>
 
-            <div class="shop-desc">
-                Applies a YELLOW COOKIE to your page for unlimited time!
-            </div>
+            <div id="item-desc">Applies a YELLOW COOKIE to your page forever!</div>
+
+            <button id="buy-btn">Buy (100🍪)</button>
 
         </div>
 
@@ -357,69 +359,118 @@ body{
 
 <script>
 
-let cookies = 0;
+/* ===== STORAGE ===== */
 
-const shopBtn = document.getElementById("shop-button");
-const sidebar = document.getElementById("shop-sidebar");
-const closeShop = document.getElementById("close-shop");
+let cookies = Number(localStorage.getItem("cookies")) || 0;
+let owned = JSON.parse(localStorage.getItem("owned")) || [];
+
+/* ELEMENTS */
+
 const counter = document.getElementById("counter");
 const cookie = document.getElementById("cookie");
+const cookieImg = document.getElementById("cookie-img");
+const buyBtn = document.getElementById("buy-btn");
 
-/* OPEN SHOP */
-shopBtn.addEventListener("click",()=>{
-    sidebar.classList.add("open");
-});
+const sidebar = document.getElementById("shop-sidebar");
+const shopBtn = document.getElementById("shop-button");
+const closeBtn = document.getElementById("close-shop");
 
-/* CLOSE SHOP */
-closeShop.addEventListener("click",()=>{
-    sidebar.classList.remove("open");
-});
+/* UPDATE */
+
+function updateUI(){
+    counter.innerText = `${cookies} Cookies 🍪`;
+    localStorage.setItem("cookies", cookies);
+    localStorage.setItem("owned", JSON.stringify(owned));
+
+    // Update buy button state
+    if (owned.includes("yellow")) {
+        buyBtn.disabled = true;
+        buyBtn.innerText = "Owned";
+    } else if (cookies >= 100) {
+        buyBtn.disabled = false;
+        buyBtn.innerText = "Buy (100🍪)";
+    } else {
+        buyBtn.disabled = true;
+        buyBtn.innerText = "You can't afford this item!";
+    }
+}
+
+/* INIT */
+
+updateUI();
+
+// Apply owned items on load
+if (owned.includes("yellow")) {
+    cookieImg.src = "items/yellow_cookie.png";
+}
 
 /* COOKIE CLICK */
-cookie.addEventListener("click",(e)=>{
 
+cookie.onclick = (e)=>{
     cookies++;
-    counter.innerText = `${cookies} Cookies 🍪`;
+    updateUI();
 
     cookie.animate([
-        { transform:"scale(1)" },
-        { transform:"scale(0.9)" },
-        { transform:"scale(1.12)" },
-        { transform:"scale(1)" }
-    ],{ duration:250 });
+        {transform:"scale(1)"},
+        {transform:"scale(0.9)"},
+        {transform:"scale(1.1)"},
+        {transform:"scale(1)"}
+    ],{duration:250});
+};
 
-    counter.animate([
-        { transform:"scale(1)" },
-        { transform:"scale(1.25)" },
-        { transform:"scale(1)" }
-    ],{ duration:300 });
+/* BUY */
 
-    const plus = document.createElement("div");
-    plus.className = "click-number";
-    plus.innerText = "+1";
+buyBtn.onclick = ()=>{
 
-    plus.style.left = e.clientX + "px";
-    plus.style.top = e.clientY + "px";
+    if(cookies >= 100 && !owned.includes("yellow")){
 
-    document.body.appendChild(plus);
-    setTimeout(()=>plus.remove(),1000);
+        cookies -= 100;
+        owned.push("yellow");
 
-    for(let i=0;i<18;i++){
+        cookieImg.src = "items/yellow_cookie.png";
 
-        const s = document.createElement("div");
-        s.className = "spark";
+        updateUI();
 
-        s.style.left = e.clientX + "px";
-        s.style.top = e.clientY + "px";
+        // Purchase animation
+        const effect = document.createElement("div");
+        effect.className = "purchase-effect";
+        effect.innerText = "PURCHASED!";
+        document.getElementById("cookie-container").appendChild(effect);
+        setTimeout(() => effect.remove(), 2000);
+    }
+};
 
-        s.style.setProperty("--x",(Math.random()-0.5)*300+"px");
-        s.style.setProperty("--y",(Math.random()-0.5)*300+"px");
+/* LIBRARY APPLY */
 
-        document.body.appendChild(s);
-        setTimeout(()=>s.remove(),700);
+function selectItem(){
+    if(owned.includes("yellow")){
+        cookieImg.src = "items/yellow_cookie.png";
+    }
+}
+
+document.getElementById("yellow-item").onclick = selectItem;
+
+/* SHOP TOGGLE */
+
+shopBtn.onclick = ()=> sidebar.classList.add("open");
+closeBtn.onclick = ()=> sidebar.classList.remove("open");
+
+/* ===== CONSOLE CHEAT FIX ===== */
+
+window.force_cookie_ = function(value){
+
+    value = Number(value);
+
+    if (isNaN(value)) {
+        console.log("❌ Not a number");
+        return;
     }
 
-});
+    cookies = value;
+    updateUI();
+
+    console.log(`🍪 Forced cookies to ${cookies}`);
+};
 
 </script>
 
